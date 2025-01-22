@@ -6,6 +6,7 @@ import (
 	"book-management-backend/routes"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors" // Import CORS middleware
 )
 
 func main() {
@@ -15,6 +16,11 @@ func main() {
 	// Connect to Database
 	config.ConnectDatabase()
 
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:3000", // Frontend React berjalan di port 3000
+		AllowMethods: "GET,POST,PUT,DELETE",   // Metode HTTP yang diizinkan
+		AllowHeaders: "Content-Type",          // Header yang diizinkan
+	}))
 	// Migrate Database Schema
 	models.MigrateBooks(config.DB)
 
@@ -22,5 +28,5 @@ func main() {
 	routes.BookRoutes(app)
 
 	// Start Server
-	app.Listen(":3000")
+	app.Listen(":3001")
 }

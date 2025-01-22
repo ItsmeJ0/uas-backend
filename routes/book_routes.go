@@ -7,10 +7,10 @@ import (
 )
 
 func BookRoutes(app *fiber.App) {
-	api := app.Group("/books")
-	api.Get("/", handlers.GetBooks)
-	api.Get("/:id", handlers.GetBookByID)
-	api.Post("/", handlers.CreateBook)
-	api.Put("/:id", handlers.UpdateBook)
-	api.Delete("/:id", handlers.DeleteBook)
+	api := app.Group("/api") // Prefix API
+	api.Get("/books", handlers.GetBooks)
+	api.Post("/books", handlers.CreateBook)
+	api.Get("/books/:id", handlers.GetBookByID)
+	api.Put("/books/:id", handlers.UpdateBook)
+	api.Delete("/books/:id", handlers.DeleteBook)
 }
