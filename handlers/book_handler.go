@@ -4,10 +4,50 @@ import (
 	"book-management-backend/config"
 	"book-management-backend/models"
 	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 )
 
+var jwtSecretKey = []byte("your-secret-key")
+
+type LoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type LoginResponse struct {
+	Token string `json:"token"`
+}
+
+func Login(c *fiber.Ctx) error {
+	var request LoginRequest
+
+	// Parse body request
+	if err := c.BodyParser(&request); err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid request"})
+	}
+
+	// Validasi kredensial (contoh sederhana, gunakan database dalam praktik nyata)
+	if request.Username != "admin" || request.Password != "password" {
+		return c.Status(401).JSON(fiber.Map{"error": "Invalid credentials"})
+	}
+
+	// Buat token JWT
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"username": request.Username,
+		"exp":      time.Now().Add(time.Hour * 24).Unix(), // Token berlaku 24 jam
+	})
+
+	// Tanda tangani token dengan secret key
+	tokenString, err := token.SignedString(jwtSecretKey)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Could not generate token"})
+	}
+
+	return c.JSON(LoginResponse{Token: tokenString})
+}
 func GetBooks(c *fiber.Ctx) error {
 	var books []models.Book
 	config.DB.Find(&books)
