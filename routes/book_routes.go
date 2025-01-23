@@ -2,21 +2,21 @@ package routes
 
 import (
 	"book-management-backend/handlers"
-	"book-management-backend/middlewares"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func AuthRoutes(app *fiber.App) {
-	api := app.Group("/api")
-	api.Post("/login", handlers.Login)
-}
-
 func BookRoutes(app *fiber.App) {
-	api := app.Group("/api")
-	api.Get("/books", middlewares.JWTMiddleware, handlers.GetBooks)
-	api.Post("/books", middlewares.JWTMiddleware, handlers.CreateBook)
-	api.Get("/books/:id", middlewares.JWTMiddleware, handlers.GetBookByID)
-	api.Put("/books/:id", middlewares.JWTMiddleware, handlers.UpdateBook)
-	api.Delete("/books/:id", middlewares.JWTMiddleware, handlers.DeleteBook)
+	api := app.Group("/api") // Prefix API
+
+	// Routes for books
+	api.Get("/books", handlers.GetBooks)
+	api.Post("/books", handlers.CreateBook)
+	api.Get("/books/:id", handlers.GetBookByID)
+	api.Put("/books/:id", handlers.UpdateBook)
+	api.Delete("/books/:id", handlers.DeleteBook)
+
+	// Routes for users
+	api.Post("/login", handlers.Login)
+	api.Post("/register", handlers.RegisterUser) // Pindahkan ke dalam grup 'api'
 }

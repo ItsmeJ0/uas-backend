@@ -16,13 +16,15 @@ func main() {
 	// Connect to Database
 	config.ConnectDatabase()
 
+	// Gunakan middleware CORS
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:3000", // Frontend React berjalan di port 3000
-		AllowMethods: "GET,POST,PUT,DELETE",   // Metode HTTP yang diizinkan
-		AllowHeaders: "Content-Type",          // Header yang diizinkan
+		AllowOrigins: "http://localhost:3000",       // Frontend React berjalan di port 3000
+		AllowMethods: "GET,POST,PUT,DELETE",         // Metode HTTP yang diizinkan
+		AllowHeaders: "Content-Type, Authorization", // Menambahkan 'Authorization' ke header yang diizinkan
 	}))
+
 	// Migrate Database Schema
-	models.MigrateBooks(config.DB)
+	models.MigrateSchema(config.DB)
 
 	// Register Routes
 	routes.BookRoutes(app)
