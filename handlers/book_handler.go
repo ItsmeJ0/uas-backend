@@ -11,6 +11,7 @@ import (
 func GetBooks(c *fiber.Ctx) error {
 	var books []models.Book
 	config.DB.Find(&books)
+	fmt.Println(books) // Debug log untuk memastikan ID ada di dalam data
 	return c.JSON(books)
 }
 
@@ -46,15 +47,22 @@ func CreateBook(c *fiber.Ctx) error {
 }
 
 func UpdateBook(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id := c.Params("id") // Ambil ID dari parameter URL
 	var book models.Book
+
+	// Cari buku berdasarkan ID
 	if result := config.DB.First(&book, id); result.Error != nil {
 		return c.Status(404).JSON(fiber.Map{"error": "Book not found"})
 	}
+
+	// Parse data dari body request
 	if err := c.BodyParser(&book); err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": "Cannot parse JSON"})
 	}
+
+	// Update data buku di database
 	config.DB.Save(&book)
+
 	return c.JSON(book)
 }
 
