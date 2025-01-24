@@ -58,9 +58,9 @@ func main() {
 
 	// Use middleware for CORS
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "new-uas-frontend-production.up.railway.app", // Frontend React runs on port 3000
-		AllowMethods:     "GET,POST,PUT,DELETE",                        // Allowed HTTP methods
-		AllowHeaders:     "Content-Type, Authorization",                // Add 'Authorization' header
+		AllowOrigins:     "https://new-uas-frontend-production.up.railway.app",
+		AllowMethods:     "GET,POST,PUT,DELETE",
+		AllowHeaders:     "Content-Type, Authorization",
 		AllowCredentials: true,
 	}))
 
