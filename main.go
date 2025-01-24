@@ -58,10 +58,10 @@ func main() {
 
 	// Use middleware for CORS
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "https://new-uas-frontend-production.up.railway.app", // Ganti dengan domain frontend Anda
-		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",                        // HTTP methods yang diizinkan
-		AllowHeaders:     "Content-Type, Authorization",                        // Header yang diizinkan
-		AllowCredentials: true,                                                 // Izinkan pengiriman credentials (token, cookies)
+		AllowOrigins:     "https://new-uas-frontend-production.up.railway.app", // Frontend React runs on port 3000
+		AllowMethods:     "GET,POST,PUT,DELETE",                                // Allowed HTTP methods
+		AllowHeaders:     "Content-Type, Authorization",                        // Add 'Authorization' header
+		AllowCredentials: true,
 	}))
 
 	// Migrate Database Schema
