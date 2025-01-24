@@ -5,6 +5,7 @@ import (
 	"book-management-backend/models"
 	"book-management-backend/routes"
 	"log"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors" // Import CORS middleware
@@ -15,12 +16,23 @@ var connections []*websocket.Conn
 
 // WebSocket handler
 func handleWebSocket(c *websocket.Conn) {
+	log.Println("New WebSocket connection established") // Log koneksi masuk
 	connections = append(connections, c)
+
+	defer func() {
+		log.Println("WebSocket connection closed") // Log koneksi tertutup
+		for i, conn := range connections {
+			if conn == c {
+				connections = append(connections[:i], connections[i+1:]...)
+				break
+			}
+		}
+	}()
 
 	for {
 		_, _, err := c.ReadMessage()
 		if err != nil {
-			log.Println("WebSocket error:", err)
+			log.Println("WebSocket read error:", err)
 			break
 		}
 	}
@@ -46,9 +58,10 @@ func main() {
 
 	// Use middleware for CORS
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:3000",       // Frontend React runs on port 3000
-		AllowMethods: "GET,POST,PUT,DELETE",         // Allowed HTTP methods
-		AllowHeaders: "Content-Type, Authorization", // Add 'Authorization' header
+		AllowOrigins:     "http://localhost:3000",       // Frontend React runs on port 3000
+		AllowMethods:     "GET,POST,PUT,DELETE",         // Allowed HTTP methods
+		AllowHeaders:     "Content-Type, Authorization", // Add 'Authorization' header
+		AllowCredentials: true,
 	}))
 
 	// Migrate Database Schema
@@ -58,23 +71,32 @@ func main() {
 	routes.BookRoutes(app)
 
 	// WebSocket endpoint for announcements
-	app.Get("/ws", websocket.New(handleWebSocket))
+	app.Get("/ws", websocket.New(handleWebSocket, websocket.Config{
+		HandshakeTimeout: 10 * time.Second, // Timeout untuk handshake WebSocket
+	}))
 
 	// Route to add announcements
 	app.Post("/api/announcement", func(c *fiber.Ctx) error {
-		var announcement models.Announcement
+		// Cetak body mentah untuk debugging
+		log.Println("Raw request body:", string(c.Body()))
+
+		var announcement models.Announcements
 		if err := c.BodyParser(&announcement); err != nil {
-			return c.Status(400).SendString("Invalid request body")
+			log.Println("Error parsing body:", err)
+			return c.Status(400).JSON(fiber.Map{"error": "Invalid request body"})
 		}
 
-		// Save announcement to the database
+		log.Println("Parsed announcement:", announcement)
+
+		if announcement.Message == "" {
+			return c.Status(400).JSON(fiber.Map{"error": "Message cannot be empty"})
+		}
+
 		if err := config.DB.Create(&announcement).Error; err != nil {
-			return c.Status(500).SendString("Failed to save announcement")
+			return c.Status(500).JSON(fiber.Map{"error": "Failed to save announcement"})
 		}
 
-		// Send the announcement to all connected WebSocket clients
-		sendAnnouncementToClients(announcement.Content)
-
+		sendAnnouncementToClients(announcement.Message)
 		return c.Status(201).JSON(announcement)
 	})
 
