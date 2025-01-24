@@ -58,7 +58,7 @@ func main() {
 
 	// Use middleware for CORS
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "https://new-uas-frontend-production.up.railway.app",
+		AllowOrigins:     "https://new-uas-frontend.vercel.app/",
 		AllowMethods:     "GET,POST,PUT,DELETE",
 		AllowHeaders:     "Content-Type, Authorization",
 		AllowCredentials: true,
