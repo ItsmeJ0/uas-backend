@@ -18,7 +18,11 @@ type Users struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+type Announcement struct {
+	gorm.Model
+	Content string `json:"content"`
+}
 
 func MigrateSchema(db *gorm.DB) {
-	db.AutoMigrate(&Book{}, &Users{})
+	db.AutoMigrate(&Users{}, &Book{}, &Announcement{})
 }
