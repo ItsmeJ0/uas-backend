@@ -13,8 +13,8 @@ var DB *gorm.DB
 // ConnectDatabase mengatur koneksi ke database
 func ConnectDatabase() {
 	// Konfigurasi koneksi
-	// dsn := "root:IXUSUugDwJFcrwkQOzkMXsGgQyBpzDUc@tcp(autorack.proxy.rlwy.net:39777)/railway?charset=utf8&parseTime=True&loc=Local"
-	dsn := "root:@tcp(localhost:3306)/library?charset=utf8&parseTime=True&loc=Local"
+	dsn := "root:IXUSUugDwJFcrwkQOzkMXsGgQyBpzDUc@tcp(autorack.proxy.rlwy.net:39777)/railway?charset=utf8&parseTime=True&loc=Local"
+	// dsn := "root:@tcp(localhost:3306)/library?charset=utf8&parseTime=True&loc=Local"
 
 	// Buka koneksi ke database
 	database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
