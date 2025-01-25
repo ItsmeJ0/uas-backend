@@ -13,8 +13,8 @@ var DB *gorm.DB
 // ConnectDatabase mengatur koneksi ke database
 func ConnectDatabase() {
 	// Konfigurasi koneksi
-	dsn := "root:ZxPsdaVdKVGwIfczHfHTtuxpUerYHFmy@tcp(autorack.proxy.rlwy.net:50591)/railway?charset=utf8mb4&parseTime=True&loc=Local"
-	// dsn := "admin:admin123@tcp(database-1.cv6oi4oimtxt.ap-southeast-1.rds.amazonaws.com:3306)/books?charset=utf8mb4&parseTime=True&loc=Local"
+	// dsn := "root:ZxPsdaVdKVGwIfczHfHTtuxpUerYHFmy@tcp(autorack.proxy.rlwy.net:50591)/railway?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "admin:admin123@tcp(database-1.cv6oi4oimtxt.ap-southeast-1.rds.amazonaws.com:3306)/books?charset=utf8mb4&parseTime=True&loc=Local"
 	// dsn := "root:@tcp(localhost:3306)/library?charset=utf8&parseTime=True&loc=Local"
 
 	// Buka koneksi ke database

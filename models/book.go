@@ -5,13 +5,11 @@ import (
 )
 
 type Book struct {
-	ID       uint   `gorm:"primaryKey" json:"id"`
-	Title    string `json:"title"`
-	Author   string `json:"author"`
-	Year     string `json:"year"`
-	Genre    string `json:"genre"`
-	Penerbit string `json:"penerbit"`
-	Halaman  string `json:"halaman"`
+	ID     uint   `gorm:"primaryKey" json:"id"`
+	Title  string `json:"title"`
+	Author string `json:"author"`
+	Year   string `json:"year"`
+	Genre  string `json:"genre"`
 }
 
 type Users struct {
@@ -21,7 +19,6 @@ type Users struct {
 	Password string `json:"password"`
 }
 type Announcements struct {
-	ID      uint   `json:"id" gorm:"primaryKey"`
 	Message string `json:"message" validate:"required"`
 }
 
